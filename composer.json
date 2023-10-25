@@ -1,0 +1,28 @@
+{
+    "name": "aislandener/laravel-telco",
+    "description": "Telco Interface to Laravel",
+    "version": "0.0.1",
+    "type": "library",
+    "require": {
+        "php": "^8.1",
+        "illuminate/support": "^10.29",
+        "guzzlehttp/guzzle": "^7.8"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.14",
+        "phpunit/phpunit": "^10.4"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Aislandener\\Telco\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Aislan Dener Souza Vicentini",
+            "email": "aislandenersouzavicentini@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable"
+}
