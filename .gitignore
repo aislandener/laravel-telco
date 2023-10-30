@@ -2,4 +2,5 @@ vendor/
 .fleet/
 .vscode/
 .idea/
+workbench/
 composer.lock

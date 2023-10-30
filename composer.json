@@ -1,11 +1,11 @@
 {
     "name": "aislandener/laravel-telco",
     "description": "Telco Interface to Laravel",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "type": "library",
     "require": {
         "php": "^8.1",
-        "illuminate/support": "^10.29",
+        "illuminate/support": "^v10",
         "guzzlehttp/guzzle": "^7.8"
     },
     "require-dev": {
@@ -18,11 +18,42 @@
             "Aislandener\\Telco\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Aislandener\\Telco\\Tests\\": "tests/",
+            "Workbench\\App\\": "workbench/app/",
+            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Aislandener\\Telco\\TelcoServiceProvider"
+            ],
+            "aliases": {
+                "Telco": "Aislandener\\Telco\\Facades\\Telco"
+            }
+        }
+    },
     "authors": [
         {
             "name": "Aislan Dener Souza Vicentini",
             "email": "aislandenersouzavicentini@gmail.com"
         }
     ],
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+    "scripts": {
+        "post-autoload-dump": [
+            "@clear",
+            "@prepare"
+        ],
+        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "build": "@php vendor/bin/testbench workbench:build --ansi",
+        "serve": [
+            "@build",
+            "@php vendor/bin/testbench serve"
+        ]
+    }
 }
