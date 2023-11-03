@@ -56,7 +56,7 @@ class TelcoService
             ->contentType('application/json')
             ->withBasicAuth($username, $password)
             ->timeout(10)
-            ->get('auth/token/gerar');
+            ->get('ws/auth/token/gerar');
 
         Cache::set(self::TELCO_TOKEN, $http->json('token'));
 
