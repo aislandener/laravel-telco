@@ -88,6 +88,11 @@ class TelcoService
         return new TelephonyService($this->http);
     }
 
+    #[Pure] public function financial(): FinancialService
+    {
+        return new FinancialService($this->http);
+    }
+
 
 
 }

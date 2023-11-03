@@ -8,7 +8,21 @@ use Illuminate\Support\Collection;
 class AddressService
 {
     public function __construct(private readonly PendingRequest $http)
-    {}
+    {
+    }
+
+    public function getCitiesFromState(string $state, string $cep = null): Collection
+    {
+        return collect(
+            $this->http
+                ->when($cep, fn(PendingRequest $http, string $value) => $http->withQueryParameters(['cep' => $value]))
+                ->withUrlParameters([
+                    'uf' => $state
+                ])
+                ->get('/ws/terceiros/cidades/uf/{uf}')
+                ->json('resposta')
+        );
+    }
 
     public function neighborhoods(int $cityId, string $cep): Collection
     {
