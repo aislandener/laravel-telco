@@ -25,7 +25,7 @@ class FinancialService
                 ->withUrlParameters([
                     'cityId' => $cityId,
                     'type' => $typeBilling->value,
-                ])->get('ws/financeiro/formas_cobranca/cidade/{cityId/tipo/{type}')
+                ])->get('ws/financeiro/formas_cobranca/cidade/{cityId}/tipo/{type}')
                 ->json('resposta')
         );
     }
