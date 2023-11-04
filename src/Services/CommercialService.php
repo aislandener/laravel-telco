@@ -185,6 +185,26 @@ class CommercialService
         return collect($this->http->get('ws/comercial/tecnologias')->json('resposta'));
     }
 
+    public function getCoverageArea(int $cityId): Collection
+    {
+        return collect($this->http
+            ->withUrlParameters(['cityId' => $cityId])
+            ->get('ws/comercial/contratos/areas_cobertura/cidade/{cityId}')
+            ->json('resposta'));
+    }
+
+    public function getSpeeds(int $planId, int $contractTypeId, int $coverageId, TypePerson $typePerson): Collection
+    {
+        return collect($this->http
+            ->post('ws/comercial/contratos/tabela/precos/velocidades',[
+                'idPlano' => $planId,
+                'idTipoContrato' => $contractTypeId,
+                'idAreaCobertura' => $coverageId,
+                'tipoPessoa' => $typePerson->apiName()
+            ])
+            ->json('resposta'));
+    }
+
     public function getDiscounts(TelcoParams $client, array $data): Collection
     {
         return collect($this->http->post('ws/comercial/contratos/promocoes/ativas', $client->commitPromoExists($data))->json('resposta'));
