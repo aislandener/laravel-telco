@@ -28,7 +28,9 @@ class AddressService
     {
         return collect($this->http
             ->withUrlParameters(['city' => $cityId])
-            ->get('ws/terceiros/bairros/cidade/{city}')
+            ->get('ws/terceiros/bairros/cidade/{city}',[
+                'cep' => $cep
+            ])
             ->json('resposta')
         );
     }
@@ -37,7 +39,9 @@ class AddressService
     {
         return collect($this->http
             ->withUrlParameters(['neighborhood' => $neighborhoodId])
-            ->get('ws/terceiros/enderecos/bairro/{neighborhood}')
+            ->get('ws/terceiros/enderecos/bairro/{neighborhood}',[
+                'cep' => $cep
+            ])
             ->json('resposta')
         );
     }
