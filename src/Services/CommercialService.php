@@ -57,7 +57,7 @@ class CommercialService
 
     public function checkTechnicalViabilityOnProspect(int $prospectId, int $sellerId): bool
     {
-        $response = $this->http->post('ws/comercial/prospectos/credito_interno/consultar', [
+        $response = $this->http->post('ws/comercial/prospectos/viabilidade_tecnica/consultar', [
             'idProspecto' => $prospectId,
             'idUsuario' => $sellerId
         ])->json('resposta');
