@@ -11,8 +11,8 @@ class Address
         public string $number,
         public string $typeAddress,
         public int $classificationAddressId,
-        public string $complement,
-        public string $reference,
+        public ?string $complement,
+        public ?string $reference,
     )
     {}
 
