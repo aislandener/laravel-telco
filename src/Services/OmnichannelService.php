@@ -22,4 +22,12 @@ class OmnichannelService
             'qtdeDiasLimite' => $days
         ])->json());
     }
+
+    public function scheduleInstallation(int $serviceId, int $dateId): Collection
+    {
+        return collect($this->http->put('ws/integracao/omnichannel/agenda_tecnica/configuracoes/efetivar', [
+            'idAtendimento' => $serviceId,
+            'idItemConfiguracaoAgendaTecnica' => $dateId,
+        ])->json());
+    }
 }
