@@ -3,15 +3,17 @@
 namespace Aislandener\Telco\Services;
 
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Support\Collection;
 
 class ClientService
 {
     public function __construct(private readonly PendingRequest $http)
-    {}
-
-    public function getAvailableDueDates(): mixed
     {
-        return $this->http->get('ws/area/cliente/vencimentos/ativos')->json();
+    }
+
+    public function getAvailableDueDates(): Collection
+    {
+        return collect($this->http->get('ws/area/cliente/vencimentos/ativos')->json('data'));
     }
 
 }
