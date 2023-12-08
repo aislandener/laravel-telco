@@ -20,7 +20,7 @@ class OmnichannelService
             'shift' => $shift->apiInfo()
         ])->get('ws/integracao/omnichannel/agenda_tecnica/configuracoes/atendimento/{serviceId}/data/{date}/turno/{shift}', [
             'qtdeDiasLimite' => $days
-        ])->json());
+        ])->json('data'));
     }
 
     public function scheduleInstallation(int $serviceId, int $dateId): Collection
