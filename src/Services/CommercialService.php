@@ -133,7 +133,7 @@ class CommercialService
 
     public function registerContractOnClient(TelcoParams $client): mixed
     {
-        return $this->http->post('comercial/contratos/cadastrar', $client->commitContractToClient())->json();
+        return $this->http->post('ws/comercial/contratos/cadastrar', $client->commitContractToClient())->json('resposta');
     }
 
     public function getContractDetails(int $contractId): mixed
