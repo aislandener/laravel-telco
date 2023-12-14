@@ -58,7 +58,7 @@ class Combo implements TelcoParams
             'idSaidaCaixa' => $this->outputBoxId,
             'idCaixa' => $this->boxId,
             'valorContrato' => strval(round(collect($info['PlanosPacote'])->sum(fn($combo) => ($combo['ValorPlano'] - $combo['DescontoPacote'])), 2)),
-            'dadosPlanosPacote' => $info->map(fn($combo) => [
+            'dadosPlanosPacote' => collect($info['PlanosPacote'])->map(fn($combo) => [
                 'idPlano' => $combo['IdPlano'],
                 'valorContrato' => strval($combo['ValorPlano'] - $combo['DescontoPacote']),
             ]),
