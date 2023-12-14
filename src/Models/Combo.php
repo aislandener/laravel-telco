@@ -2,10 +2,10 @@
 
 namespace Aislandener\Telco\Models;
 
-use Illuminate\Support\Collection;
 use Aislandener\Telco\Contracts\TelcoParams;
 use Aislandener\Telco\Enums\TypePerson;
 use Aislandener\Telco\Facades\Telco;
+use Illuminate\Support\Collection;
 
 class Combo implements TelcoParams
 {
@@ -35,7 +35,8 @@ class Combo implements TelcoParams
         public int        $blockInternationalCall = 0,
         public TypePerson $typePerson = TypePerson::Personal,
     )
-    {}
+    {
+    }
 
     public function commitContractToClient(): array
     {
@@ -56,7 +57,7 @@ class Combo implements TelcoParams
             'idPacote' => $this->comboId,
             'idSaidaCaixa' => $this->outputBoxId,
             'idCaixa' => $this->boxId,
-            'valorContrato' => strval(round(collect($info)->sum(fn($combo) => ($combo['ValorPlano'] - $combo['DescontoPacote'])), 2)),
+            'valorContrato' => strval(round(collect($info['PlanosPacote'])->sum(fn($combo) => ($combo['ValorPlano'] - $combo['DescontoPacote'])), 2)),
             'dadosPlanosPacote' => $info->map(fn($combo) => [
                 'idPlano' => $combo['IdPlano'],
                 'valorContrato' => strval($combo['ValorPlano'] - $combo['DescontoPacote']),
@@ -96,12 +97,9 @@ class Combo implements TelcoParams
     {
         return Telco::commercial()
             ->getTechnologies()
-            ->whereIn('descricao', $this->getInfoServer()
-                ->pluck('PlanosPacote')
-                ->flatten(1)
+            ->whereIn('descricao', collect($this->getInfoServer()['PlanosPacote'])
                 ->pluck('Tecnologia')
-                ->toArray()
-            )
+                ->toArray())
             ->implode('id', '-');
     }
 
