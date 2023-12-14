@@ -62,6 +62,7 @@ class Combo implements TelcoParams
                 'idPlano' => $combo['IdPlano'],
                 'valorContrato' => strval($combo['ValorPlano'] - $combo['DescontoPacote']),
             ]),
+            'idsPromocoes' => $this->promo,
         ];
 
         if ($this->numberId)
