@@ -61,7 +61,7 @@ class Plan implements TelcoParams
             'idFormaCobranca' => $this->billingMethodId,
             'idTipoContrato' => $this->contractTypeId,
             'idCidade' => $this->cityId,
-            'idPerfil' => $this->sellerId,
+            'idPerfil' => $data['sellerId'] ?? $this->sellerId,
             'tipoPessoa' => $this->typePerson->apiName(),
             'idPlano' => $this->planId,
             'idTecnologia' => $this->getTechnologyId(),

@@ -83,7 +83,7 @@ class Combo implements TelcoParams
             'idFormaCobranca' => $this->billingMethodId,
             'idTipoContrato' => $this->contractTypeId,
             'idCidade' => $this->cityId,
-            'idPerfil' => $this->sellerId,
+            'idPerfil' => $data['sellerId'] ?? $this->sellerId,
             'tipoPessoa' => $this->typePerson->apiName(),
             'idPacote' => $this->comboId,
             'idsTecnologias' => $this->getTechnologyId(),
