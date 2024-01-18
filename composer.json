@@ -1,7 +1,7 @@
 {
     "name": "aislandener/laravel-telco",
     "description": "Telco Interface to Laravel",
-    "version": "1.5.6",
+    "version": "1.5.7",
     "type": "library",
     "require": {
         "php": "^8.1",
