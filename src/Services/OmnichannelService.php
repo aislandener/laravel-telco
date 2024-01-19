@@ -35,7 +35,7 @@ class OmnichannelService
             throw new TelcoException($data->json('error'), 422);
         }
 
-        return $data->json('data');
+        return collect($data->json('data'));
     }
 
     /**
