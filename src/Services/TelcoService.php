@@ -93,6 +93,11 @@ class TelcoService
         return new FinancialService($this->http);
     }
 
+   #[Pure] public function clientApp(): ClientAppService
+   {
+       return new ClientAppService($this->http);
+   }
+
 
 
 }

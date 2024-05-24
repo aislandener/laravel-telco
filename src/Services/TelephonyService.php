@@ -7,9 +7,9 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Aislandener\Telco\Exceptions\TelcoException;
 
-class TelephonyService
+readonly class TelephonyService
 {
-    public function __construct(private readonly PendingRequest $http)
+    public function __construct(private PendingRequest $http)
     {}
 
     public function getPrefix(bool $isPortability, int $city, ?string $prefix = null): Collection

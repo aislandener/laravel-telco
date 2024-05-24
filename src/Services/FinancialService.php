@@ -6,9 +6,9 @@ use Aislandener\Telco\Enums\TypeBilling;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Collection;
 
-class FinancialService
+readonly class FinancialService
 {
-    public function __construct(private readonly PendingRequest $http)
+    public function __construct(private PendingRequest $http)
     {}
 
     public function getPaymentMethods(): Collection

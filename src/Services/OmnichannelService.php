@@ -8,9 +8,9 @@ use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Collection;
 use Aislandener\Telco\Enums\ShiftInstallation;
 
-class OmnichannelService
+readonly class OmnichannelService
 {
-    public function __construct(private readonly PendingRequest $http)
+    public function __construct(private PendingRequest $http)
     {}
 
     /**

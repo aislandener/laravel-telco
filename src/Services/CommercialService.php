@@ -11,9 +11,9 @@ use Aislandener\Telco\Exceptions\TelcoException;
 use Aislandener\Telco\Models\Address;
 use Aislandener\Telco\Models\Prospect;
 
-class CommercialService
+readonly class CommercialService
 {
-    public function __construct(private readonly PendingRequest $http)
+    public function __construct(private PendingRequest $http)
     {
     }
 

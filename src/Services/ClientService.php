@@ -5,9 +5,9 @@ namespace Aislandener\Telco\Services;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Collection;
 
-class ClientService
+readonly class ClientService
 {
-    public function __construct(private readonly PendingRequest $http)
+    public function __construct(private PendingRequest $http)
     {
     }
 

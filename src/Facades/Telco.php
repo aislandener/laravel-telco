@@ -12,6 +12,7 @@ use Aislandener\Telco\Services as Services;
  * @method static Services\OmnichannelService omnichannel()
  * @method static Services\TelephonyService telephony()
  * @method static Services\FinancialService financial()
+ * @method static Services\ClientAppService clientApp()
  */
 class Telco extends Facade
 {
