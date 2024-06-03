@@ -210,4 +210,9 @@ readonly class CommercialService
         return collect($this->http->post('ws/comercial/contratos/promocoes/ativas', $client->commitPromoExists($data))->json('resposta'));
     }
 
+    public function getClientByCpf(string $cpfcnpj): Collection
+    {
+        return collect($this->http->post('ws/comercial/cliente/dados', ['cpfcnpj' => $cpfcnpj])->json());
+    }
+
 }
