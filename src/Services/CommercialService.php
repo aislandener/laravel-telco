@@ -3,6 +3,7 @@
 namespace Aislandener\Telco\Services;
 
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Aislandener\Telco\Contracts\TelcoParams;
@@ -182,37 +183,53 @@ readonly class CommercialService
 
     public function getTechnologies(): Collection
     {
-        return collect($this->http->get('ws/comercial/tecnologias')->json('resposta'));
+        return $this->http->get('ws/comercial/tecnologias')->collect('resposta');
     }
 
     public function getCoverageArea(int $cityId): Collection
     {
-        return collect($this->http
+        return $this->http
             ->withUrlParameters(['cityId' => $cityId])
             ->get('ws/comercial/contratos/areas_cobertura/cidade/{cityId}')
-            ->json('resposta'));
+            ->collect('resposta');
     }
 
     public function getSpeeds(int $planId, int $contractTypeId, int $coverageId, TypePerson $typePerson): Collection
     {
-        return collect($this->http
+        return $this->http
             ->post('ws/comercial/contratos/tabela/precos/velocidades',[
                 'idPlano' => $planId,
                 'idTipoContrato' => $contractTypeId,
                 'idAreaCobertura' => $coverageId,
                 'tipoPessoa' => $typePerson->apiName()
             ])
-            ->json('resposta'));
+            ->collect('resposta');
     }
 
     public function getDiscounts(TelcoParams $client, array $data): Collection
     {
-        return collect($this->http->post('ws/comercial/contratos/promocoes/ativas', $client->commitPromoExists($data))->json('resposta'));
+        return $this->http->post('ws/comercial/contratos/promocoes/ativas', $client->commitPromoExists($data))->collect('resposta');
     }
 
     public function getClientByCpf(string $cpfcnpj): Collection
     {
-        return collect($this->http->post('ws/comercial/cliente/dados', ['cpfcnpj' => $cpfcnpj])->json());
+        return $this->http->post('ws/comercial/cliente/dados', ['cpfcnpj' => $cpfcnpj])->collect();
+    }
+
+    public function getClientDataInvoicesContractsByCPF(string $cpfcnpj, ?Carbon $startDate = null, ?Carbon $endDate = null): Collection
+    {
+        $param = [];
+        if($startDate){
+            $param['dataInicioVencFatura'] = $startDate->format('d-m-Y');
+        }
+        if($endDate){
+            $param['dataFimVencFatura'] = $endDate->format('d-m-Y');
+        }
+        return $this->http
+            ->withQueryParameters($param)
+            ->post('/ws/comercial/cliente/dados', [
+            'cpfcnpj' => $cpfcnpj,
+        ])->collect();
     }
 
 }

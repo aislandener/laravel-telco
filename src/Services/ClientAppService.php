@@ -32,4 +32,14 @@ readonly class ClientAppService
         ]);
     }
 
+    public function getInvoices(string $username, string $password, string $clientId)
+    {
+        return $this->http->withUrlParameters([
+            'clientId' => $clientId
+        ])->post('/ws/comercial/contratos/cliente/{clientId}',[
+            'usuario'=> $username,
+            'senha'=> $password,
+        ])->json();
+    }
+
 }
