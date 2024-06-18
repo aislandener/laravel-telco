@@ -42,4 +42,17 @@ readonly class ClientAppService
         ])->json();
     }
 
+    public function changeDueDate(string $username, string $password, string $clientId, int $nowDueDateId, int $newDueDateId): PromiseInterface|Response
+    {
+        return $this->http->withUrlParameters([
+            'clientId' => $clientId,
+        ])->withQueryParameters([
+            'vencimentoAtual' => $nowDueDateId,
+            'novoVencimento' => $newDueDateId,
+        ])->post('/ws/comercial/cliente/{clientId}/alterar/vencimento_contrato',[
+            'usuario'=> $username,
+            'senha'=> $password,
+        ]);
+    }
+
 }
