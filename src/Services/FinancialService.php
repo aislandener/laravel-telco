@@ -30,4 +30,12 @@ readonly class FinancialService
         );
     }
 
+    public function getAllInvoicesByCpf(string $cpf_cnpj): Collection
+    {
+        return $this->http
+            ->withUrlParameters(['cpf_cnpj' => $cpf_cnpj,])
+            ->get('ws/financeiro/faturas/{cpf_cnpj}/todas')
+            ->collect();
+    }
+
 }
