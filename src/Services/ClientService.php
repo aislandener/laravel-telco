@@ -16,4 +16,13 @@ readonly class ClientService
         return collect($this->http->get('ws/area/cliente/vencimentos/ativos')->json('data'));
     }
 
+    public function getContractById(int $contractId)
+    {
+        return $this->http
+            ->withUrlParameters([
+                'contractId' => $contractId,
+            ])
+            ->get('ws/area/cliente/contrato/{contractId}')->collect();
+    }
+
 }
