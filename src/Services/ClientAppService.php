@@ -65,4 +65,15 @@ readonly class ClientAppService
         ])->collect();
     }
 
+    public function downloadPdfContract(string $username, string $password, string $contract_id)
+    {
+        return $this->http->withUrlParameters([
+            'contractId' => $contract_id,
+        ])->post('/ws/comercial/contratos/modelo_contrato/:contractId',[
+            'usuario'=> $username,
+            'senha'=> $password,
+        ])->collect();
+
+    }
+
 }
