@@ -26,7 +26,7 @@ readonly class ClientAppService
 
     public function resetPassword(string $cpfcnpj, int $clientId): PromiseInterface|Response
     {
-        return $this->http->put('/ws/area/cliente/resetar_senha',[
+        return $this->http->put('/ws/area/cliente/resetar_senha', [
             'CPFCNPJ' => $cpfcnpj,
             'IDCliente' => $clientId,
         ]);
@@ -36,9 +36,9 @@ readonly class ClientAppService
     {
         return $this->http->withUrlParameters([
             'clientId' => $clientId
-        ])->post('/ws/comercial/contratos/cliente/{clientId}',[
-            'usuario'=> $username,
-            'senha'=> $password,
+        ])->post('/ws/comercial/contratos/cliente/{clientId}', [
+            'usuario' => $username,
+            'senha' => $password,
         ])->json();
     }
 
@@ -49,9 +49,9 @@ readonly class ClientAppService
         ])->withQueryParameters([
             'vencimentoAtual' => $nowDueDateId,
             'novoVencimento' => $newDueDateId,
-        ])->post('/ws/comercial/cliente/{clientId}/alterar/vencimento_contrato',[
-            'usuario'=> $username,
-            'senha'=> $password,
+        ])->post('/ws/comercial/cliente/{clientId}/alterar/vencimento_contrato', [
+            'usuario' => $username,
+            'senha' => $password,
         ]);
     }
 
@@ -59,20 +59,20 @@ readonly class ClientAppService
     {
         return $this->http->withUrlParameters([
             'clientId' => $clientId,
-        ])->post('/ws/comercial/contratos/cliente/{clientId}',[
-            'usuario'=> $username,
-            'senha'=> $password,
+        ])->post('/ws/comercial/contratos/cliente/{clientId}', [
+            'usuario' => $username,
+            'senha' => $password,
         ])->collect();
     }
 
-    public function downloadPdfContract(string $username, string $password, string $contract_id)
+    public function downloadPdfContract(string $contract_id, string $path)
     {
-        return $this->http->withUrlParameters([
-            'contractId' => $contract_id,
-        ])->post('/ws/comercial/contratos/modelo_contrato/:contractId',[
-            'usuario'=> $username,
-            'senha'=> $password,
-        ])->collect();
+        return $this->http->accept('*/*')
+            ->withUrlParameters([
+                'contractId' => $contract_id,
+            ])
+            ->sink($path)
+            ->get('/ws/comercial/contratos/modelo/{contractId}');
 
     }
 
