@@ -3,7 +3,9 @@
 namespace Aislandener\Telco\Services;
 
 use Aislandener\Telco\Enums\TypeBilling;
+use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
 
 readonly class FinancialService
@@ -36,6 +38,48 @@ readonly class FinancialService
             ->withUrlParameters(['cpf_cnpj' => $cpf_cnpj,])
             ->get('ws/financeiro/faturas/{cpf_cnpj}/todas')
             ->collect();
+    }
+
+    public function getCardsRegistersByClient(string $clientId): Collection
+    {
+        return $this->http
+            ->withUrlParameters(['client_id' => $clientId])
+            ->get('ws/financeiro/dados_cartao/recorrencia/cliente/{client_id}/buscar')
+            ->collect('resposta');
+    }
+
+    public function getCardInformation(string $cardNumber): Collection
+    {
+        return $this->http
+            ->withQueryParameters(['numeroCartao' => $cardNumber])
+            ->get('ws/integracao/cielo/ecommerce/informacao_cartao')
+            ->collect();
+    }
+
+    public function getPix(string $documentNumber, int $clientId, int $invoiceId, string $name, string $documentType): Collection
+    {
+        return $this->http
+            ->post('ws/financeiro/pix/buscar',[
+                "idFatura" => $invoiceId,
+                "idCliente" => $clientId,
+                "nomeCliente" => $name,
+                "documentoCliente" => $documentNumber,
+                "tipoDocumentoCliente" => $documentType
+            ])
+            ->collect('resposta');
+    }
+
+    public function downloadInvoice($invoice_id, string $path, string $username, string $password): PromiseInterface|Response
+    {
+        return $this->http->accept('*/*')
+            ->withUrlParameters([
+                'invoiceId' => $invoice_id,
+            ])
+            ->sink($path)
+            ->post('/ws/financeiro/fatura/{invoiceId}',[
+                'usuario' => $username,
+                'senha' => $password
+            ]);
     }
 
 }
