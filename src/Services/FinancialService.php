@@ -6,6 +6,7 @@ use Aislandener\Telco\Enums\TypeBilling;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
 readonly class FinancialService
@@ -80,6 +81,22 @@ readonly class FinancialService
                 'usuario' => $username,
                 'senha' => $password
             ]);
+    }
+
+    public function downloadAnnualPayment(string $username, string $password, string $clientId, Carbon $startDate, Carbon $endDate, string $path): PromiseInterface|Response
+    {
+        return $this->http->accept('*/*')
+            ->withQueryParameters([
+                'dataInicio' => $startDate->format('d-m-Y'),
+                'dataFim' => $endDate->format('d-m-Y'),
+                'idCliente' => $clientId,
+            ])
+            ->sink($path)
+            ->post('ws/financeiro/faturamento/quitacao_anual_debito',[
+                'usuario' => $username,
+                'senha' => $password,
+            ]);
+
     }
 
 }
