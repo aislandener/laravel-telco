@@ -2,15 +2,14 @@
 
 namespace Aislandener\Telco\Services;
 
+use Aislandener\Telco\Exceptions\TelcoException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Aislandener\Telco\Exceptions\TelcoException;
 
 readonly class TelephonyService
 {
-    public function __construct(private PendingRequest $http)
-    {}
+    public function __construct(private PendingRequest $http) {}
 
     public function getPrefix(bool $isPortability, int $city, ?string $prefix = null): Collection
     {
@@ -23,7 +22,7 @@ readonly class TelephonyService
                 ->json('resposta')
         );
 
-        if (!$isPortability) {
+        if (! $isPortability) {
             $prefixTelco = $response->sortBy('id')->first();
         } else {
             $prefix = Str::substr($prefix, 2, -4);
@@ -34,23 +33,20 @@ readonly class TelephonyService
     }
 
     /**
-     * @param array $prefix
-     * @param string|null $number
-     * @return Collection
      * @throws TelcoException
      */
-    public function getNumberTelephony(array $prefix, string $number = null): Collection
+    public function getNumberTelephony(array $prefix, ?string $number = null): Collection
     {
         $numbers = collect(
             $this->http->withUrlParameters([
-                'prefix' => $prefix['id']
+                'prefix' => $prefix['id'],
             ])
                 ->get('ws/telefonia/numeros/livres/prefixo/{prefix}')
                 ->json('resposta')
         );
 
         if ($numbers->isEmpty()) {
-            throw new TelcoException("Nenhum número disponível", 500);
+            throw new TelcoException('Nenhum número disponível', 500);
         }
 
         return collect($numbers->random());

@@ -7,9 +7,7 @@ use Illuminate\Support\Collection;
 
 readonly class ClientService
 {
-    public function __construct(private PendingRequest $http)
-    {
-    }
+    public function __construct(private PendingRequest $http) {}
 
     public function getAvailableDueDates(): Collection
     {
@@ -24,5 +22,4 @@ readonly class ClientService
             ])
             ->get('ws/area/cliente/contrato/{contractId}')->collect();
     }
-
 }

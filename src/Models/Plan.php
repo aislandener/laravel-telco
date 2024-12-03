@@ -2,36 +2,33 @@
 
 namespace Aislandener\Telco\Models;
 
-use Illuminate\Support\Collection;
 use Aislandener\Telco\Contracts\TelcoParams;
 use Aislandener\Telco\Enums\TypePerson;
 use Aislandener\Telco\Facades\Telco;
+use Illuminate\Support\Collection;
 
 class Plan implements TelcoParams
 {
-
     public function __construct(
-        public int        $sellerId,
-        public int        $planId,
-        public int        $billingMethodId,
-        public int        $contractTypeId,
-        public ?int       $cityId,
-        public ?int       $clientId,
-        public ?float     $contractValue,
-        public ?array     $addressIds,
-        public ?int       $dueId,
-        public ?int       $sellerChannel,
-        public ?int       $outputBoxId,
-        public ?int       $boxId,
-        public array      $promo = [],
-        public string     $loyalty = 'MESES_12',
-        public int        $noCancelDueToDefault = 1,
-        public int        $commercialOrigin = 15,
-        public int        $canSuspend = 1,
+        public int $sellerId,
+        public int $planId,
+        public int $billingMethodId,
+        public int $contractTypeId,
+        public ?int $cityId,
+        public ?int $clientId,
+        public ?float $contractValue,
+        public ?array $addressIds,
+        public ?int $dueId,
+        public ?int $sellerChannel,
+        public ?int $outputBoxId,
+        public ?int $boxId,
+        public array $promo = [],
+        public string $loyalty = 'MESES_12',
+        public int $noCancelDueToDefault = 1,
+        public int $commercialOrigin = 15,
+        public int $canSuspend = 1,
         public TypePerson $typePerson = TypePerson::Personal,
-    )
-    {
-    }
+    ) {}
 
     public function commitContractToClient(): array
     {
@@ -74,7 +71,7 @@ class Plan implements TelcoParams
 
     public function getTechnologyId(): string
     {
-        return (string)Telco::commercial()
+        return (string) Telco::commercial()
             ->getTechnologies()
             ->firstWhere('descricao', $this->getInfoServer()['Tecnologia'])['id'];
     }
@@ -85,7 +82,7 @@ class Plan implements TelcoParams
             Telco::commercial()
                 ->getPlans($this->cityId, $technologyId, $this->contractTypeId, $this->typePerson)
                 ->where('IdPlano', $this->planId)
-                ->flatMap(fn($element) => $element)
+                ->flatMap(fn ($element) => $element)
         );
     }
 }

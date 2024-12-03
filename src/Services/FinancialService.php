@@ -11,8 +11,7 @@ use Illuminate\Support\Collection;
 
 readonly class FinancialService
 {
-    public function __construct(private PendingRequest $http)
-    {}
+    public function __construct(private PendingRequest $http) {}
 
     public function getPaymentMethods(): Collection
     {
@@ -36,7 +35,7 @@ readonly class FinancialService
     public function getAllInvoicesByCpf(string $cpf_cnpj): Collection
     {
         return $this->http
-            ->withUrlParameters(['cpf_cnpj' => $cpf_cnpj,])
+            ->withUrlParameters(['cpf_cnpj' => $cpf_cnpj])
             ->get('ws/financeiro/faturas/{cpf_cnpj}/todas')
             ->collect();
     }
@@ -60,12 +59,12 @@ readonly class FinancialService
     public function getPix(string $documentNumber, int $clientId, int $invoiceId, string $name, string $documentType): Collection
     {
         return $this->http
-            ->post('ws/financeiro/pix/buscar',[
-                "idFatura" => $invoiceId,
-                "idCliente" => $clientId,
-                "nomeCliente" => $name,
-                "documentoCliente" => $documentNumber,
-                "tipoDocumentoCliente" => $documentType
+            ->post('ws/financeiro/pix/buscar', [
+                'idFatura' => $invoiceId,
+                'idCliente' => $clientId,
+                'nomeCliente' => $name,
+                'documentoCliente' => $documentNumber,
+                'tipoDocumentoCliente' => $documentType,
             ])
             ->collect('resposta');
     }
@@ -77,9 +76,9 @@ readonly class FinancialService
                 'invoiceId' => $invoice_id,
             ])
             ->sink($path)
-            ->post('/ws/financeiro/fatura/{invoiceId}',[
+            ->post('/ws/financeiro/fatura/{invoiceId}', [
                 'usuario' => $username,
-                'senha' => $password
+                'senha' => $password,
             ]);
     }
 
@@ -92,11 +91,10 @@ readonly class FinancialService
                 'idCliente' => $clientId,
             ])
             ->sink($path)
-            ->post('ws/financeiro/faturamento/quitacao_anual_debito',[
+            ->post('ws/financeiro/faturamento/quitacao_anual_debito', [
                 'usuario' => $username,
                 'senha' => $password,
             ]);
 
     }
-
 }

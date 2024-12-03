@@ -9,34 +9,31 @@ use Illuminate\Support\Collection;
 
 class Combo implements TelcoParams
 {
-
     public function __construct(
-        public int        $sellerId,
-        public int        $comboId,
-        public int        $billingMethodId,
-        public int        $contractTypeId,
-        public ?int       $cityId,
-        public ?int       $clientId,
-        public ?float     $contractValue,
-        public ?array     $addressIds,
-        public ?int       $dueId,
-        public ?int       $sellerChannel,
-        public ?int       $outputBoxId,
-        public ?int       $boxId,
-        public ?int       $numberId,
-        public array      $promo = [],
-        public string     $loyalty = 'MESES_12',
-        public int        $noCancelDueToDefault = 1,
-        public int        $commercialOrigin = 15,
-        public int        $canSuspend = 1,
-        public int        $blockCollectCall = 0,
-        public int        $blockDddCall = 0,
-        public int        $blockCellPhoneCall = 0,
-        public int        $blockInternationalCall = 0,
+        public int $sellerId,
+        public int $comboId,
+        public int $billingMethodId,
+        public int $contractTypeId,
+        public ?int $cityId,
+        public ?int $clientId,
+        public ?float $contractValue,
+        public ?array $addressIds,
+        public ?int $dueId,
+        public ?int $sellerChannel,
+        public ?int $outputBoxId,
+        public ?int $boxId,
+        public ?int $numberId,
+        public array $promo = [],
+        public string $loyalty = 'MESES_12',
+        public int $noCancelDueToDefault = 1,
+        public int $commercialOrigin = 15,
+        public int $canSuspend = 1,
+        public int $blockCollectCall = 0,
+        public int $blockDddCall = 0,
+        public int $blockCellPhoneCall = 0,
+        public int $blockInternationalCall = 0,
         public TypePerson $typePerson = TypePerson::Personal,
-    )
-    {
-    }
+    ) {}
 
     public function commitContractToClient(): array
     {
@@ -57,22 +54,23 @@ class Combo implements TelcoParams
             'idPacote' => $this->comboId,
             'idSaidaCaixa' => $this->outputBoxId,
             'idCaixa' => $this->boxId,
-            'valorContrato' => strval(round(collect($info['PlanosPacote'])->sum(fn($combo) => ($combo['ValorPlano'] - $combo['DescontoPacote'])), 2)),
-            'dadosPlanosPacote' => collect($info['PlanosPacote'])->map(fn($combo) => [
+            'valorContrato' => strval(round(collect($info['PlanosPacote'])->sum(fn ($combo) => ($combo['ValorPlano'] - $combo['DescontoPacote'])), 2)),
+            'dadosPlanosPacote' => collect($info['PlanosPacote'])->map(fn ($combo) => [
                 'idPlano' => $combo['IdPlano'],
                 'valorContrato' => strval($combo['ValorPlano'] - $combo['DescontoPacote']),
             ]),
             'idsPromocoes' => $this->promo,
         ];
 
-        if ($this->numberId)
+        if ($this->numberId) {
             $data = array_merge($data, [
-                "idNumero" => $this->numberId,
-                "bloquearLigacaoCobrar" => $this->blockCollectCall,
-                "bloquearLigacaoDDD" => $this->blockDddCall,
-                "bloquearLigacaoCelular" => $this->blockCellPhoneCall,
-                "exibeListaTelefonica" => $this->blockInternationalCall,
+                'idNumero' => $this->numberId,
+                'bloquearLigacaoCobrar' => $this->blockCollectCall,
+                'bloquearLigacaoDDD' => $this->blockDddCall,
+                'bloquearLigacaoCelular' => $this->blockCellPhoneCall,
+                'exibeListaTelefonica' => $this->blockInternationalCall,
             ]);
+        }
 
         return $data;
     }

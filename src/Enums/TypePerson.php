@@ -2,8 +2,6 @@
 
 namespace Aislandener\Telco\Enums;
 
-use App\Enums\TargetAudience;
-
 enum TypePerson: string
 {
     case Personal = 'personal';
@@ -16,7 +14,7 @@ enum TypePerson: string
 
     public static function getApiName(TypePerson $value): string
     {
-        return match ($value){
+        return match ($value) {
             self::Personal => 'PessoaFisica',
             self::Business => 'PessoaJuridica'
         };

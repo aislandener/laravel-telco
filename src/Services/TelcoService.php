@@ -2,6 +2,7 @@
 
 namespace Aislandener\Telco\Services;
 
+use Aislandener\Telco\Exceptions\TelcoException;
 use Exception;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\PendingRequest;
@@ -10,41 +11,43 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use JetBrains\PhpStorm\Pure;
-use Aislandener\Telco\Exceptions\TelcoException;
 
 class TelcoService
 {
-
     private PendingRequest $http;
 
     private const TELCO_TOKEN = 'telco.token';
 
     public function __construct(
-        string $url,
-        string $username,
-        string $password
-    )
-    {
+        string                  $url,
+        string                  $username,
+        string                  $password,
+        private readonly string $recurrenceKey,
+        private readonly string $recurrenceCipher,
+    ) {
         $this->http = Http::baseUrl($url)
             ->acceptJson()
             ->asJson()
             ->withBasicAuth($username, $password)
             ->timeout(10)
             ->withHeader('Token', Cache::get(self::TELCO_TOKEN, ''))
-            ->retry( 5, 100, when: function (Exception $exception, PendingRequest $request) use ($url, $username, $password) {
-                if ($exception instanceof ConnectionException)
+            ->retry(5, 100, when: function (Exception $exception, PendingRequest $request) use ($url, $username, $password) {
+                if ($exception instanceof ConnectionException) {
                     return true;
-                if (!$exception instanceof RequestException ||
-                    $exception->response->status() !== 401)
+                }
+                if (! $exception instanceof RequestException ||
+                    $exception->response->status() !== 401) {
                     return false;
+                }
 
                 $request->replaceHeaders(['Token' => $this->getNewToken($url, $username, $password)]);
 
                 return true;
             }, throw: false)
-            ->throw(function (Response $response, RequestException $e){
-                if ($response->json('error'))
+            ->throw(function (Response $response, RequestException $e) {
+                if ($response->json('error')) {
                     throw new TelcoException($response->json('error'), $e->getCode(), $e);
+                }
                 throw $e;
             });
     }
@@ -63,41 +66,51 @@ class TelcoService
         return Cache::get(self::TELCO_TOKEN);
     }
 
-    #[Pure] public function address(): AddressService
+    #[Pure]
+    public function address(): AddressService
     {
         return new AddressService($this->http);
     }
 
-    #[Pure] public function commercial(): CommercialService
+    #[Pure]
+    public function commercial(): CommercialService
     {
         return new CommercialService($this->http);
     }
 
-    #[Pure] public function client(): ClientService
+    #[Pure]
+    public function client(): ClientService
     {
         return new ClientService($this->http);
     }
 
-    #[Pure] public function omnichannel() : OmnichannelService
+    #[Pure]
+    public function omnichannel(): OmnichannelService
     {
         return new OmnichannelService($this->http);
     }
 
-    #[Pure] public function telephony(): TelephonyService
+    #[Pure]
+    public function telephony(): TelephonyService
     {
         return new TelephonyService($this->http);
     }
 
-    #[Pure] public function financial(): FinancialService
+    #[Pure]
+    public function financial(): FinancialService
     {
         return new FinancialService($this->http);
     }
 
-   #[Pure] public function clientApp(): ClientAppService
-   {
-       return new ClientAppService($this->http);
-   }
+    #[Pure]
+    public function clientApp(): ClientAppService
+    {
+        return new ClientAppService($this->http);
+    }
 
-
-
+    #[Pure]
+    public function card(): CardService
+    {
+        return new CardService($this->http, $this->recurrenceKey, $this->recurrenceCipher);
+    }
 }

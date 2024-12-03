@@ -7,17 +7,15 @@ use Illuminate\Support\Collection;
 
 readonly class AddressService
 {
-    public function __construct(private PendingRequest $http)
-    {
-    }
+    public function __construct(private PendingRequest $http) {}
 
-    public function getCitiesFromState(string $state, string $cep = null): Collection
+    public function getCitiesFromState(string $state, ?string $cep = null): Collection
     {
         return collect(
             $this->http
-                ->when($cep, fn(PendingRequest $http, string $value) => $http->withQueryParameters(['cep' => $value]))
+                ->when($cep, fn (PendingRequest $http, string $value) => $http->withQueryParameters(['cep' => $value]))
                 ->withUrlParameters([
-                    'uf' => $state
+                    'uf' => $state,
                 ])
                 ->get('/ws/terceiros/cidades/uf/{uf}')
                 ->json('resposta')
@@ -28,8 +26,8 @@ readonly class AddressService
     {
         return collect($this->http
             ->withUrlParameters(['city' => $cityId])
-            ->get('ws/terceiros/bairros/cidade/{city}',[
-                'cep' => $cep
+            ->get('ws/terceiros/bairros/cidade/{city}', [
+                'cep' => $cep,
             ])
             ->json('resposta')
         );
@@ -39,8 +37,8 @@ readonly class AddressService
     {
         return collect($this->http
             ->withUrlParameters(['neighborhood' => $neighborhoodId])
-            ->get('ws/terceiros/enderecos/bairro/{neighborhood}',[
-                'cep' => $cep
+            ->get('ws/terceiros/enderecos/bairro/{neighborhood}', [
+                'cep' => $cep,
             ])
             ->json('resposta')
         );

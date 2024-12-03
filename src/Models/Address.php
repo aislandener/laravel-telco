@@ -13,8 +13,7 @@ class Address
         public int $classificationAddressId,
         public ?string $complement,
         public ?string $reference,
-    )
-    {}
+    ) {}
 
     public function toArray()
     {

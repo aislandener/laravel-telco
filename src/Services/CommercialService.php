@@ -2,21 +2,18 @@
 
 namespace Aislandener\Telco\Services;
 
+use Aislandener\Telco\Contracts\TelcoParams;
+use Aislandener\Telco\Enums\TypePerson;
+use Aislandener\Telco\Models\Address;
+use Aislandener\Telco\Models\Prospect;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Aislandener\Telco\Contracts\TelcoParams;
-use Aislandener\Telco\Enums\TypePerson;
-use Aislandener\Telco\Exceptions\TelcoException;
-use Aislandener\Telco\Models\Address;
-use Aislandener\Telco\Models\Prospect;
 
 readonly class CommercialService
 {
-    public function __construct(private PendingRequest $http)
-    {
-    }
+    public function __construct(private PendingRequest $http) {}
 
     public function registerProspect(Prospect $prospect): mixed
     {
@@ -32,35 +29,35 @@ readonly class CommercialService
     {
         $response = $this->http->post('ws/comercial/prospectos/credito_endereco/consultar', [
             'idProspecto' => $prospectId,
-            'idUsuario' => $sellerId
+            'idUsuario' => $sellerId,
         ])->json('resposta');
 
         if (array_key_exists('possuiDivida', $response)) {
-            return !$response['possuiDivida']; // true = não tem débito
+            return ! $response['possuiDivida']; // true = não tem débito
         }
 
-        return !array_key_exists('faturas', $response);  // false = tem débito
+        return ! array_key_exists('faturas', $response);  // false = tem débito
     }
 
     public function checkDebitOnProspect(int $prospectId, int $sellerId): bool
     {
         $response = $this->http->post('ws/comercial/prospectos/credito_interno/consultar', [
             'idProspecto' => $prospectId,
-            'idUsuario' => $sellerId
+            'idUsuario' => $sellerId,
         ])->json('resposta');
 
         if (array_key_exists('possuiDivida', $response)) {
-            return !$response['possuiDivida']; // true = não tem débito
+            return ! $response['possuiDivida']; // true = não tem débito
         }
 
-        return !array_key_exists('faturas', $response);  // false = tem débito
+        return ! array_key_exists('faturas', $response);  // false = tem débito
     }
 
     public function checkTechnicalViabilityOnProspect(int $prospectId, int $sellerId): bool
     {
         $response = $this->http->post('ws/comercial/prospectos/viabilidade_tecnica/consultar', [
             'idProspecto' => $prospectId,
-            'idUsuario' => $sellerId
+            'idUsuario' => $sellerId,
         ])->json('resposta');
 
         return Str::contains($response['resultado'], 'APROVADO');
@@ -97,7 +94,7 @@ readonly class CommercialService
             'parceiro' => $partner,
             'recebeSMS' => $receiveSms,
             'idTipoAtividade' => $typeAtividadeId,
-            'idCfop' => $cfopId
+            'idCfop' => $cfopId,
         ])->json();
     }
 
@@ -106,7 +103,7 @@ readonly class CommercialService
         return collect(
             $this->http->withUrlParameters([
                 'typeContractId' => $typeContractId,
-                'cityId' => $cityId
+                'cityId' => $cityId,
             ])
                 ->get('ws/comercial/contratos/pacotes/tipo_contrato/{typeContractId}/cidade/{cityId}')
                 ->json('resposta')
@@ -114,9 +111,9 @@ readonly class CommercialService
     }
 
     public function getPlans(
-        int        $cityId,
-        int        $technologyId = 4,
-        int        $typeContractId = 4,
+        int $cityId,
+        int $technologyId = 4,
+        int $typeContractId = 4,
         TypePerson $typePerson = TypePerson::Personal): Collection
     {
         return collect(
@@ -125,7 +122,7 @@ readonly class CommercialService
                     'technologyId' => $technologyId,
                     'typeContractId' => $typeContractId,
                     'typePerson' => $typePerson->apiName(),
-                    'cityId' => $cityId
+                    'cityId' => $cityId,
                 ])
                 ->get('ws/comercial/contratos/planos/tecnologia/{technologyId}/tipo_contrato/{typeContractId}/tipo_pessoa/{typePerson}/cidade/{cityId}')
                 ->json('resposta')
@@ -141,14 +138,14 @@ readonly class CommercialService
     {
         return $this->http->withQueryParameters(['somenteContrato' => 's'])
             ->post('ws/comercial/contrato/dados', [
-                'idContrato' => $contractId
+                'idContrato' => $contractId,
             ])->json();
     }
 
     public function createTicket(
-        int    $contractId,
+        int $contractId,
         string $description = '[e-Commerce] Agendamento de instalação',
-        int    $typeServiceId = 21): mixed
+        int $typeServiceId = 21): mixed
     {
         return $this->http->post('ws/comercial/atendimentos/cadastrar', [
             'idContrato' => $contractId,
@@ -162,7 +159,7 @@ readonly class CommercialService
         return collect(
             $this->http->withUrlParameters([
                 'addressId' => $addressClient,
-                'typeContractId' => $typeContractId
+                'typeContractId' => $typeContractId,
             ])
                 ->get('ws/comercial/clientes/enderecos/{addressId}/caixas/proximas/tipo_contrato/{typeContractId}')
                 ->json('resposta')
@@ -172,7 +169,7 @@ readonly class CommercialService
     public function getClientAddress(int $clientId): Collection
     {
         return collect($this->http->withUrlParameters([
-            'clientId' => $clientId
+            'clientId' => $clientId,
         ])->get('ws/comercial/clientes/{clientId}/enderecos')->json('resposta'));
     }
 
@@ -197,11 +194,11 @@ readonly class CommercialService
     public function getSpeeds(int $planId, int $contractTypeId, int $coverageId, TypePerson $typePerson): Collection
     {
         return $this->http
-            ->post('ws/comercial/contratos/tabela/precos/velocidades',[
+            ->post('ws/comercial/contratos/tabela/precos/velocidades', [
                 'idPlano' => $planId,
                 'idTipoContrato' => $contractTypeId,
                 'idAreaCobertura' => $coverageId,
-                'tipoPessoa' => $typePerson->apiName()
+                'tipoPessoa' => $typePerson->apiName(),
             ])
             ->collect('resposta');
     }
@@ -219,24 +216,24 @@ readonly class CommercialService
     public function getClientDataInvoicesContractsByCPF(string $cpfcnpj, ?Carbon $startDate = null, ?Carbon $endDate = null): Collection
     {
         $param = [];
-        if($startDate){
+        if ($startDate) {
             $param['dataInicioVencFatura'] = $startDate->format('d-m-Y');
         }
-        if($endDate){
+        if ($endDate) {
             $param['dataFimVencFatura'] = $endDate->format('d-m-Y');
         }
+
         return $this->http
             ->withQueryParameters($param)
             ->post('/ws/comercial/cliente/dados', [
-            'cpfcnpj' => $cpfcnpj,
-        ])->collect();
+                'cpfcnpj' => $cpfcnpj,
+            ])->collect();
     }
 
     public function requestChangeContract(string $client_id, array $data)
     {
-        return $this->http->post('/ws/comercial/alterarPerfil',array_merge([
-            'IDCliente' => $client_id
+        return $this->http->post('/ws/comercial/alterarPerfil', array_merge([
+            'IDCliente' => $client_id,
         ], $data))->collect();
     }
-
 }

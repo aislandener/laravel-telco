@@ -15,11 +15,10 @@ enum ShiftInstallation: string
 
     private static function getApiInfo(ShiftInstallation $shiftInstallation): string
     {
-        return match($shiftInstallation){
+        return match ($shiftInstallation) {
             self::Morning => 'MANHA',
             self::Afternoon => 'TARDE',
 
         };
     }
-
 }

@@ -13,5 +13,4 @@ interface TelcoParams
     public function getTechnologyId(): string;
 
     public function getInfoServer(int $technologyId = 4): Collection;
-
 }

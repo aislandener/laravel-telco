@@ -9,28 +9,26 @@ class Prospect
 {
     public function __construct(
         public TypePerson $typePerson,
-        public string     $name,
-        public string     $fixedPhone,
-        public string     $cellPhone,
-        public Carbon     $birthDate,
-        public int        $sellerId,
-        public int        $prospectSegmentId,
-        public int        $prospectTypeId,
-        public int        $sellerChannelId,
-        public int        $companyId,
-        public string     $email,
-        public ?string    $obsProspect = null,
-        public ?string    $cpf = null,
-        public ?string    $rg = null,
-        public ?string    $motherName = null,
-        public ?string    $gender = null,
-        public ?string    $cnpj = null,
-        public ?string    $stateRegistration = null,
-        public ?string    $municipalRegistration = null,
-        public ?string    $fantasyName = null,
-    )
-    {
-    }
+        public string $name,
+        public string $fixedPhone,
+        public string $cellPhone,
+        public Carbon $birthDate,
+        public int $sellerId,
+        public int $prospectSegmentId,
+        public int $prospectTypeId,
+        public int $sellerChannelId,
+        public int $companyId,
+        public string $email,
+        public ?string $obsProspect = null,
+        public ?string $cpf = null,
+        public ?string $rg = null,
+        public ?string $motherName = null,
+        public ?string $gender = null,
+        public ?string $cnpj = null,
+        public ?string $stateRegistration = null,
+        public ?string $municipalRegistration = null,
+        public ?string $fantasyName = null,
+    ) {}
 
     public function toArray(): array
     {
@@ -46,7 +44,7 @@ class Prospect
             'idCanalVenda' => $this->sellerChannelId,
             'idEmpresa' => $this->companyId,
             'email' => $this->email,
-            'observacaoProspecto' => $this->obsProspect
+            'observacaoProspecto' => $this->obsProspect,
         ];
 
         return array_merge($data, match ($this->typePerson) {
@@ -60,7 +58,7 @@ class Prospect
                 'cnpj' => $this->cnpj,
                 'inscricaoEstadual' => $this->stateRegistration,
                 'inscricaoMunicipal' => $this->municipalRegistration,
-                'nomeFantasia' => $this->fantasyName
+                'nomeFantasia' => $this->fantasyName,
             ],
         });
     }

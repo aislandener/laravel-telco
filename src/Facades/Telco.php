@@ -2,8 +2,8 @@
 
 namespace Aislandener\Telco\Facades;
 
-use Illuminate\Support\Facades\Facade;
 use Aislandener\Telco\Services as Services;
+use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static Services\AddressService address()
@@ -13,13 +13,12 @@ use Aislandener\Telco\Services as Services;
  * @method static Services\TelephonyService telephony()
  * @method static Services\FinancialService financial()
  * @method static Services\ClientAppService clientApp()
+ * @method static Services\CardService card()
  */
 class Telco extends Facade
 {
-
     protected static function getFacadeAccessor()
     {
         return 'Telco';
     }
-
 }

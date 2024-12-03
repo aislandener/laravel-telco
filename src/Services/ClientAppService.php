@@ -3,16 +3,12 @@
 namespace Aislandener\Telco\Services;
 
 use GuzzleHttp\Promise\PromiseInterface;
-use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 
 readonly class ClientAppService
 {
-
-    public function __construct(private PendingRequest $http)
-    {
-    }
+    public function __construct(private PendingRequest $http) {}
 
     public function loginFull(string $username, string $password): PromiseInterface|Response
     {
@@ -35,7 +31,7 @@ readonly class ClientAppService
     public function getInvoices(string $username, string $password, string $clientId)
     {
         return $this->http->withUrlParameters([
-            'clientId' => $clientId
+            'clientId' => $clientId,
         ])->post('/ws/comercial/contratos/cliente/{clientId}', [
             'usuario' => $username,
             'senha' => $password,
@@ -75,5 +71,4 @@ readonly class ClientAppService
             ->get('/ws/comercial/contratos/modelo/{contractId}');
 
     }
-
 }
