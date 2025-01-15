@@ -27,13 +27,19 @@ class Plan implements TelcoParams
         public int $noCancelDueToDefault = 1,
         public int $commercialOrigin = 15,
         public int $canSuspend = 1,
-        public int $plannerTaxId = 6,
         public TypePerson $typePerson = TypePerson::Personal,
     ) {}
 
     public function commitContractToClient(): array
     {
-        return [
+        $info = $this->getInfoServer();
+        $planner = [];
+        if($info['PossuiPlanejamentoTributario']) {
+            $planner = [
+                'idPlanejamentoTributario' => Telco::commercial()->getPlannerTax($info['IdPlano'])['Id'],
+            ];
+        }
+        return array_merge([
             'idUsuario' => $this->sellerId,
             'idPlano' => $this->planId,
             'idCliente' => $this->clientId,
@@ -49,9 +55,8 @@ class Plan implements TelcoParams
             'fidelizacao' => $this->loyalty,
             'idSaidaCaixa' => $this->outputBoxId,
             'idCaixa' => $this->boxId,
-            'idPlanejamentoTributario' => $this->plannerTaxId,
             'idsPromocoes' => $this->promo,
-        ];
+        ], $planner);
     }
 
     public function commitPromoExists(array $data): array

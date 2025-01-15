@@ -13,7 +13,9 @@ use Illuminate\Support\Str;
 
 readonly class CommercialService
 {
-    public function __construct(private PendingRequest $http) {}
+    public function __construct(private PendingRequest $http)
+    {
+    }
 
     public function registerProspect(Prospect $prospect): mixed
     {
@@ -33,10 +35,10 @@ readonly class CommercialService
         ])->json('resposta');
 
         if (array_key_exists('possuiDivida', $response)) {
-            return ! $response['possuiDivida']; // true = não tem débito
+            return !$response['possuiDivida']; // true = não tem débito
         }
 
-        return ! array_key_exists('faturas', $response);  // false = tem débito
+        return !array_key_exists('faturas', $response);  // false = tem débito
     }
 
     public function checkDebitOnProspect(int $prospectId, int $sellerId): bool
@@ -47,10 +49,10 @@ readonly class CommercialService
         ])->json('resposta');
 
         if (array_key_exists('possuiDivida', $response)) {
-            return ! $response['possuiDivida']; // true = não tem débito
+            return !$response['possuiDivida']; // true = não tem débito
         }
 
-        return ! array_key_exists('faturas', $response);  // false = tem débito
+        return !array_key_exists('faturas', $response);  // false = tem débito
     }
 
     public function checkTechnicalViabilityOnProspect(int $prospectId, int $sellerId): bool
@@ -110,10 +112,20 @@ readonly class CommercialService
         );
     }
 
+    public function getPlannerTax(int $planId, int $companyId = 1): Collection
+    {
+        return $this->http->withUrlParameters([
+            'planId' => $planId,
+            'companyId' => $companyId,
+        ])
+            ->get('ws/comercial/contratos/planejamentos_tributarios/plano/{planId}/empresa/{companyId}')
+            ->collect('resposta');
+    }
+
     public function getPlans(
-        int $cityId,
-        int $technologyId = 4,
-        int $typeContractId = 4,
+        int        $cityId,
+        int        $technologyId = 4,
+        int        $typeContractId = 4,
         TypePerson $typePerson = TypePerson::Personal): Collection
     {
         return collect(
@@ -143,9 +155,9 @@ readonly class CommercialService
     }
 
     public function createTicket(
-        int $contractId,
+        int    $contractId,
         string $description = '[e-Commerce] Agendamento de instalação',
-        int $typeServiceId = 21): mixed
+        int    $typeServiceId = 21): mixed
     {
         return $this->http->post('ws/comercial/atendimentos/cadastrar', [
             'idContrato' => $contractId,

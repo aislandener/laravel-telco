@@ -32,7 +32,6 @@ class Combo implements TelcoParams
         public int $blockDddCall = 0,
         public int $blockCellPhoneCall = 0,
         public int $blockInternationalCall = 0,
-        public int $plannerTaxId = 6,
         public TypePerson $typePerson = TypePerson::Personal,
     ) {}
 
@@ -56,11 +55,18 @@ class Combo implements TelcoParams
             'idSaidaCaixa' => $this->outputBoxId,
             'idCaixa' => $this->boxId,
             'valorContrato' => strval(round(collect($info['PlanosPacote'])->sum(fn ($combo) => ($combo['ValorPlano'] - $combo['DescontoPacote'])), 2)),
-            'dadosPlanosPacote' => collect($info['PlanosPacote'])->map(fn ($combo) => [
-                'idPlano' => $combo['IdPlano'],
-                'valorContrato' => strval($combo['ValorPlano'] - $combo['DescontoPacote']),
-            ]),
-            'idPlanejamentoTributario' => $this->plannerTaxId,
+            'dadosPlanosPacote' => collect($info['PlanosPacote'])->map(function ($plan) {
+                $planner = [];
+                if($plan['PossuiPlanejamentoTributario']) {
+                    $planner = [
+                        'idPlanejamentoTributario' => Telco::commercial()->getPlannerTax($plan['IdPlano'])['Id'],
+                    ];
+                }
+                return array_merge([
+                    'idPlano' => $plan['IdPlano'],
+                    'valorContrato' => strval($plan['ValorPlano'] - $plan['DescontoPacote']),
+                ], $planner);
+            }),
             'idsPromocoes' => $this->promo,
         ];
 
