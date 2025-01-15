@@ -59,7 +59,7 @@ class Combo implements TelcoParams
                 $planner = [];
                 if($plan['PossuiPlanejamentoTributario']) {
                     $planner = [
-                        'idPlanejamentoTributario' => Telco::commercial()->getPlannerTax($plan['IdPlano'])['Id'],
+                        'idPlanejamentoTributario' => Telco::commercial()->getPlannerTax($plan['IdPlano'])[0]['Id'],
                     ];
                 }
                 return array_merge([

@@ -36,7 +36,7 @@ class Plan implements TelcoParams
         $planner = [];
         if($info['PossuiPlanejamentoTributario']) {
             $planner = [
-                'idPlanejamentoTributario' => Telco::commercial()->getPlannerTax($info['IdPlano'])['Id'],
+                'idPlanejamentoTributario' => Telco::commercial()->getPlannerTax($info['IdPlano'])[0]['Id'],
             ];
         }
         return array_merge([
