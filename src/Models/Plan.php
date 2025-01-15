@@ -27,6 +27,7 @@ class Plan implements TelcoParams
         public int $noCancelDueToDefault = 1,
         public int $commercialOrigin = 15,
         public int $canSuspend = 1,
+        public int $plannerTaxId = 6,
         public TypePerson $typePerson = TypePerson::Personal,
     ) {}
 
@@ -48,6 +49,7 @@ class Plan implements TelcoParams
             'fidelizacao' => $this->loyalty,
             'idSaidaCaixa' => $this->outputBoxId,
             'idCaixa' => $this->boxId,
+            'idPlanejamentoTributario' => $this->plannerTaxId,
             'idsPromocoes' => $this->promo,
         ];
     }

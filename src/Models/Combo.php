@@ -32,6 +32,7 @@ class Combo implements TelcoParams
         public int $blockDddCall = 0,
         public int $blockCellPhoneCall = 0,
         public int $blockInternationalCall = 0,
+        public int $plannerTaxId = 6,
         public TypePerson $typePerson = TypePerson::Personal,
     ) {}
 
@@ -59,6 +60,7 @@ class Combo implements TelcoParams
                 'idPlano' => $combo['IdPlano'],
                 'valorContrato' => strval($combo['ValorPlano'] - $combo['DescontoPacote']),
             ]),
+            'idPlanejamentoTributario' => $this->plannerTaxId,
             'idsPromocoes' => $this->promo,
         ];
 
