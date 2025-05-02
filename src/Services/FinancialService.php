@@ -48,10 +48,11 @@ readonly class FinancialService
             ->collect('resposta');
     }
 
-    public function getCardInformation(string $cardNumber): Collection
+    public function getCardInformation(string $cardNumber, string $invoiceId = '1'): Collection
     {
         return $this->http
-            ->withQueryParameters(['numeroCartao' => $cardNumber])
+            ->withQueryParameters(['numeroCartao' => $cardNumber,
+                'idFatura' => $invoiceId])
             ->get('ws/integracao/cielo/ecommerce/informacao_cartao')
             ->collect();
     }

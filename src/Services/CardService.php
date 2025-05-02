@@ -2,8 +2,10 @@
 
 namespace Aislandener\Telco\Services;
 
+use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\Response;
 
 readonly class CardService
 {
@@ -13,11 +15,10 @@ readonly class CardService
 
     protected function encryptData(mixed $data): string
     {
-        $encrypter = new Encrypter($this->key, $this->cipher);
-        return $encrypter->encrypt($data);
+        return openssl_encrypt($data, $this->cipher, $this->key);
     }
 
-    public function registerCard(string $clientId, array $contractsIds, string $cardFlag, string $nameOwner, string $numberCard, string $dueDate, string $lastDigits, string $securityCode)
+    public function storeCard(string $clientId, array $contractsIds, string $cardFlag, string $nameOwner, string $numberCard, string $dueDate, string $lastDigits, string $securityCode): PromiseInterface|Response
     {
         return $this->http->post('/ws/financeiro/dados_cartao/recorrencia/cadastrar/externo',[
             'idCliente' => $clientId,
@@ -28,8 +29,14 @@ readonly class CardService
             'ultimosDigitos' => $this->encryptData($lastDigits),
             'dataValidade' => $this->encryptData($dueDate),
             'idsContratos' => $contractsIds,
-
         ]);
 
+    }
+
+    public function deleteCard(string $cardId): PromiseInterface|Response
+    {
+        return $this->http->withUrlParameters([
+            'cardId' => $cardId,
+        ])->delete('ws/financeiro/dados_cartao/recorrencia/{cardId}/excluir');
     }
 }
