@@ -6,6 +6,8 @@ use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 
 readonly class CardService
 {
@@ -38,5 +40,18 @@ readonly class CardService
         return $this->http->withUrlParameters([
             'cardId' => $cardId,
         ])->delete('ws/financeiro/dados_cartao/recorrencia/{cardId}/excluir');
+    }
+
+    public function paymentInvoiceByCard(int $invoiceId, string $numberCard, string $cardFlag, string $nameCard, string $securityCode, Carbon $dueDate,): Collection
+    {
+        return $this->http->put('ws/integracao/cielo/ecommerce/realizar/pagamento',[
+            'IDFatura' => $invoiceId,
+            'FormaPagamento' => "CREDITO",
+            'NumeroCartao' => $numberCard,
+            'Bandeira' => $cardFlag,
+            'NomeImpressoCartao' => $nameCard,
+            'CodigoSeguranca' => $securityCode,
+            'ExpiracaoCartao' => $dueDate->format('m/Y'),
+        ])->collect();
     }
 }
