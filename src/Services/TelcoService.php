@@ -24,12 +24,13 @@ class TelcoService
         string                  $password,
         private readonly string $recurrenceKey,
         private readonly string $recurrenceCipher,
+        int $timeout = 30,
     ) {
         $this->http = Http::baseUrl($url)
             ->acceptJson()
             ->asJson()
             ->withBasicAuth($username, $password)
-            ->timeout(10)
+            ->timeout($timeout)
             ->withHeader('Token', Cache::get(self::TELCO_TOKEN, ''))
             ->retry(5, 100, when: function (Exception $exception, PendingRequest $request) use ($url, $username, $password) {
                 if ($exception instanceof ConnectionException) {
