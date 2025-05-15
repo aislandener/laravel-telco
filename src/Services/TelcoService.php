@@ -49,6 +49,9 @@ class TelcoService
                 if ($response->json('error')) {
                     throw new TelcoException($response->json('error'), $e->getCode(), $e);
                 }
+                if($response->json('erro')){
+                    throw new TelcoException($response->json('error'), $e->getCode(), $e);
+                }
                 throw $e;
             });
     }

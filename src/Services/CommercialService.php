@@ -248,4 +248,13 @@ readonly class CommercialService
             'IDCliente' => $client_id,
         ], $data))->collect();
     }
+
+    public function enableTrustAgreement(string $contractId): Collection
+    {
+        return $this->http
+            ->put('/ws/comercial/contrato/habilitar_confianca', [
+                'idContrato' => $contractId
+            ])
+            ->collect();
+    }
 }
