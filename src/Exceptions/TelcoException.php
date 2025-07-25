@@ -11,8 +11,8 @@ class TelcoException extends Exception
     public function render(Request $request): Response
     {
         return response([
-            'success' => false,
-            'error' => $this->message,
+            'notify' => true,
+            'message' => $this->message,
         ], $this->code === 200 ? 400 : ($this->code ?? 422));
     }
 }
