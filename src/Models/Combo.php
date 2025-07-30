@@ -65,9 +65,10 @@ class Combo implements TelcoParams
                 return array_merge([
                     'idPlano' => $plan['IdPlano'],
                     'valorContrato' => strval($plan['ValorPlano'] - $plan['DescontoPacote']),
+                ],[
+                    'idsPromocoes' => $this->promo
                 ], $planner);
             }),
-            'idsPromocoes' => $this->promo,
         ];
 
         if ($this->numberId) {
