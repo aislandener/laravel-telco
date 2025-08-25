@@ -244,7 +244,7 @@ readonly class CommercialService
 
     public function requestChangeContract(string $client_id, array $data)
     {
-        return $this->http->post('/ws/comercial/alterarPerfil', array_merge([
+        return $this->http->post('/ws/comercial/alteraPerfil', array_merge([
             'IDCliente' => $client_id,
         ], $data))->collect();
     }
