@@ -5,6 +5,7 @@ namespace Aislandener\Telco\Services;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Collection;
 
 readonly class ClientAppService
 {
@@ -70,5 +71,15 @@ readonly class ClientAppService
             ->sink($path)
             ->get('/ws/comercial/contratos/modelo/{contractId}');
 
+    }
+    
+    public function getNotifications(string $clientId, string $username, string $password): Collection
+    {
+        return $this->http->withUrlParameters([
+            'idCliente' => $clientId,
+        ])->post('/ws/comercial/avisos_app/cliente/{idCliente}', [
+            'usuario' => $username,
+            'senha' => $password,
+        ])->collect();
     }
 }
