@@ -82,4 +82,14 @@ readonly class ClientAppService
             'senha' => $password,
         ])->collect();
     }
+
+    public function updateNotification(int $notificationId, string $username, string $password): PromiseInterface|Response
+    {
+        return $this->http->withUrlParameters([
+            'id' => $notificationId,
+        ])->post('/ws/comercial/avisos_app/{id}', [
+            'usuario' => $username,
+            'senha' => $password,
+        ]);
+    }
 }
