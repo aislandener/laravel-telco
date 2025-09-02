@@ -29,6 +29,15 @@ readonly class ClientAppService
         ]);
     }
 
+    public function updatePassword(string $username, string $currentPassword, string $newPassword): PromiseInterface|Response
+    {
+        return $this->http->post('ws/comercial/redefinir_senha_novo', [
+            'usuario' => $username,
+            'senhaAntiga' => $currentPassword,
+            'novaSenha' => $newPassword,
+        ]);
+    }
+
     public function getInvoices(string $username, string $password, string $clientId)
     {
         return $this->http->withUrlParameters([
