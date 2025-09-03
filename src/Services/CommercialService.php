@@ -257,4 +257,17 @@ readonly class CommercialService
             ])
             ->collect();
     }
+
+    public function changeDueDate(string $clientId, int $newDueDateId, int $nowDueDateId): bool
+    {
+        return $this->http
+                ->withUrlParameters([
+                    'clientId' => $clientId,
+                ])
+            ->post('/ws/comercial/cliente/{clientId}/alterar/vencimentos', [
+                'idVencimentoAtual*' => $nowDueDateId,
+                'idNovoVencimento*' => $newDueDateId,
+            ])->body() === 'SUCESSO';
+
+    }
 }

@@ -61,6 +61,18 @@ readonly class ClientAppService
         ]);
     }
 
+    public function checkChangeDueDate(string $username, string $password, string $clientId, int $nowDueDateId): bool
+    {
+        return $this->http->withUrlParameters([
+            'clientId' => $clientId,
+        ])->withQueryParameters([
+            'vencimentoAtual' => $nowDueDateId,
+        ])->post('ws/comercial/cliente/{clientId}/verificar/vencimento_contrato', [
+            'usuario' => $username,
+            'senha' => $password,
+        ])->body() === '"ACCEPTED"';
+    }
+
     public function getContractsAndInvoices(string $username, string $password, string $clientId)
     {
         return $this->http->withUrlParameters([
@@ -81,7 +93,7 @@ readonly class ClientAppService
             ->get('/ws/comercial/contratos/modelo/{contractId}');
 
     }
-    
+
     public function getNotifications(string $clientId, string $username, string $password): Collection
     {
         return $this->http->withUrlParameters([
