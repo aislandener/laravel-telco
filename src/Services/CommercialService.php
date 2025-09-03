@@ -266,9 +266,9 @@ readonly class CommercialService
                 ->withUrlParameters([
                     'clientId' => $clientId,
                 ])
-            ->post('/ws/comercial/cliente/{clientId}/alterar/vencimentos', [
-                'idVencimentoAtual*' => $nowDueDateId,
-                'idNovoVencimento*' => $newDueDateId,
+            ->put('/ws/comercial/cliente/{clientId}/alterar/vencimentos', [
+                'idVencimentoAtual' => $nowDueDateId,
+                'idNovoVencimento' => $newDueDateId,
             ]);
 
     }
