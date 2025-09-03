@@ -6,7 +6,9 @@ use Aislandener\Telco\Contracts\TelcoParams;
 use Aislandener\Telco\Enums\TypePerson;
 use Aislandener\Telco\Models\Address;
 use Aislandener\Telco\Models\Prospect;
+use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -258,7 +260,7 @@ readonly class CommercialService
             ->collect();
     }
 
-    public function changeDueDate(string $clientId, int $newDueDateId, int $nowDueDateId): bool
+    public function changeDueDate(string $clientId, int $newDueDateId, int $nowDueDateId): PromiseInterface|Response
     {
         return $this->http
                 ->withUrlParameters([
@@ -267,7 +269,7 @@ readonly class CommercialService
             ->post('/ws/comercial/cliente/{clientId}/alterar/vencimentos', [
                 'idVencimentoAtual*' => $nowDueDateId,
                 'idNovoVencimento*' => $newDueDateId,
-            ])->body() === 'SUCESSO';
+            ]);
 
     }
 }
