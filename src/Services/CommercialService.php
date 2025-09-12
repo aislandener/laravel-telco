@@ -12,6 +12,7 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Illuminate\Http\UploadedFile;
 
 readonly class CommercialService
 {
@@ -270,6 +271,26 @@ readonly class CommercialService
                 'idVencimentoAtual' => $nowDueDateId,
                 'idNovoVencimento' => $newDueDateId,
             ]);
+    }
 
+    public function attachFilesToProspect(int $prospectId, int $userId, array $files): Response
+    {
+        $payload = collect($files)->map(function (UploadedFile $file, $key) use ($prospectId, $userId) {
+            return [
+                'idProspecto' => $prospectId,
+                'idUsuario' => $userId,
+                'tipo' => 'DOCUMENTO',
+                'model' => [
+                    'base64'   => base64_encode($file->getContent()),
+                    'filename' => $file->getClientOriginalName(),
+                    'filesize' => $file->getSize(),
+                    'filetype' => $file->getMimeType(),
+                ],
+            ];
+        })->values()->toArray();
+
+        return $this->http
+            ->asJson()
+            ->post('ws/comercial/prospectos/anexar_arquivos', $payload);
     }
 }
