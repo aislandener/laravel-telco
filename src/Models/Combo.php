@@ -116,7 +116,7 @@ class Combo implements TelcoParams
         return collect(
             Telco::commercial()
                 ->getCombos($this->contractTypeId, $this->cityId)
-                ->firstWhere('IdPacote', $this->comboId)
+                //->firstWhere('IdPacote', $this->comboId)
         );
     }
 }

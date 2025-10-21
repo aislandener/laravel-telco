@@ -228,6 +228,13 @@ readonly class CommercialService
         return $this->http->post('ws/comercial/cliente/dados', ['cpfcnpj' => $cpfcnpj])->collect();
     }
 
+    public function getClientById(string $idClient): Collection
+    {
+        return $this->http
+            ->withUrlParameters(['idClient' => $idClient])
+            ->get('ws/comercial/cliente/{idClient}/dados')->collect();
+    }
+
     public function getClientDataInvoicesContractsByCPF(string $cpfcnpj, ?Carbon $startDate = null, ?Carbon $endDate = null): Collection
     {
         $param = [];
