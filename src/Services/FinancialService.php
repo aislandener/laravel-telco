@@ -40,6 +40,14 @@ readonly class FinancialService
             ->collect();
     }
 
+    public function getAllInvoicesSimple(string $cpf_cnpj): Collection
+    {
+        return $this->http
+            ->withUrlParameters(['cpf_cnpj' => $cpf_cnpj])
+            ->get('ws/financeiro/faturas/{cpf_cnpj}/simplificado')
+            ->collect();
+    }
+
     public function getCardsRegistersByClient(string $clientId): Collection
     {
         return $this->http
