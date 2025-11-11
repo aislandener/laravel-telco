@@ -73,6 +73,15 @@ readonly class CommercialService
         return $this->http->post('ws/comercial/prospectos/enderecos/cadastrar', $address->toArray())->json();
     }
 
+    public function getProspectByCpf(string $cpf): Collection
+    {
+        return $this->http
+            ->withUrlParameters([
+                'cpf' => $cpf,
+            ])
+            ->get('ws/comercial/prospectos/cpfcnpj/{cpf}')->collect();
+    }
+
     public function turnProspectIntoClient(
         int $prospectId,
         int $sellerId,
