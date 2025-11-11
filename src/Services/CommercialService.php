@@ -80,7 +80,7 @@ readonly class CommercialService
                 'cpf' => $cpf,
             ])
             ->get('ws/comercial/prospectos/cpfcnpj/{cpf}')
-            ->json('resposta');
+            ->collect('resposta');
     }
 
     public function turnProspectIntoClient(
