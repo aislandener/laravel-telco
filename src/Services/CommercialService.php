@@ -79,7 +79,8 @@ readonly class CommercialService
             ->withUrlParameters([
                 'cpf' => $cpf,
             ])
-            ->get('ws/comercial/prospectos/cpfcnpj/{cpf}')->collect();
+            ->get('ws/comercial/prospectos/cpfcnpj/{cpf}')
+            ->json('resposta');
     }
 
     public function turnProspectIntoClient(

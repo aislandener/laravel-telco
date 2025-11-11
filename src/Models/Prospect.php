@@ -28,6 +28,7 @@ class Prospect
         public ?string $stateRegistration = null,
         public ?string $municipalRegistration = null,
         public ?string $fantasyName = null,
+        public ?int $prospectId = null,
     ) {}
 
     public function toArray(): array
@@ -47,7 +48,11 @@ class Prospect
             'observacaoProspecto' => $this->obsProspect,
         ];
 
-        return array_merge($data, match ($this->typePerson) {
+        $prospectId = [];
+        if(filled($this->prospectId))
+            $prospectId = ['idProspecto' => $this->prospectId];
+
+        return array_merge($prospectId, $data, match ($this->typePerson) {
             TypePerson::Personal => [
                 'cpf' => $this->cpf,
                 'rg' => $this->rg,
