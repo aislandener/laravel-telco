@@ -10,34 +10,37 @@ use Illuminate\Support\Collection;
 class Combo implements TelcoParams
 {
     public function __construct(
-        public int $sellerId,
-        public int $comboId,
-        public int $billingMethodId,
-        public int $contractTypeId,
-        public ?int $cityId,
-        public ?int $clientId,
-        public ?float $contractValue,
-        public ?array $addressIds,
-        public ?int $dueId,
-        public ?int $sellerChannel,
-        public ?int $outputBoxId,
-        public ?int $boxId,
-        public ?int $numberId,
-        public array $promo = [],
-        public string $loyalty = 'MESES_12',
-        public int $noCancelDueToDefault = 1,
-        public int $commercialOrigin = 15,
-        public int $canSuspend = 1,
-        public int $blockCollectCall = 0,
-        public int $blockDddCall = 0,
-        public int $blockCellPhoneCall = 0,
-        public int $blockInternationalCall = 0,
+        public int        $sellerId,
+        public int        $comboId,
+        public int        $billingMethodId,
+        public int        $contractTypeId,
+        public ?int       $cityId,
+        public ?int       $clientId,
+        public ?float     $contractValue,
+        public ?array     $addressIds,
+        public ?int       $dueId,
+        public ?int       $sellerChannel,
+        public ?int       $outputBoxId,
+        public ?int       $boxId,
+        public ?int       $numberId,
+        public array      $promo = [],
+        public string     $loyalty = 'MESES_12',
+        public int        $noCancelDueToDefault = 1,
+        public int        $commercialOrigin = 15,
+        public int        $canSuspend = 1,
+        public int        $blockCollectCall = 0,
+        public int        $blockDddCall = 0,
+        public int        $blockCellPhoneCall = 0,
+        public int        $blockInternationalCall = 0,
         public TypePerson $typePerson = TypePerson::Personal,
-    ) {}
+    )
+    {
+    }
 
     public function commitContractToClient(): array
     {
-        $info = $this->getInfoServer();
+        $info = $this->getInfoServer()
+            ->firstWhere('IdPacote', $this->comboId);
 
         $data = [
             'idTipoContrato' => $this->contractTypeId,
@@ -54,10 +57,10 @@ class Combo implements TelcoParams
             'idPacote' => $this->comboId,
             'idSaidaCaixa' => $this->outputBoxId,
             'idCaixa' => $this->boxId,
-            'valorContrato' => strval(round(collect($info['PlanosPacote'])->sum(fn ($combo) => ($combo['ValorPlano'] - $combo['DescontoPacote'])), 2)),
+            'valorContrato' => strval(round(collect($info['PlanosPacote'])->sum(fn($combo) => ($combo['ValorPlano'] - $combo['DescontoPacote'])), 2)),
             'dadosPlanosPacote' => collect($info['PlanosPacote'])->map(function ($plan) {
                 $planner = [];
-                if($plan['PossuiPlanejamentoTributario']) {
+                if ($plan['PossuiPlanejamentoTributario']) {
                     $planner = [
                         'idPlanejamentoTributario' => Telco::commercial()->getPlannerTax($plan['IdPlano'])[0]['Id'],
                     ];
@@ -65,7 +68,7 @@ class Combo implements TelcoParams
                 return array_merge([
                     'idPlano' => $plan['IdPlano'],
                     'valorContrato' => strval($plan['ValorPlano'] - $plan['DescontoPacote']),
-                ],[
+                ], [
                     'idsPromocoes' => $this->promo
                 ], $planner);
             }),
@@ -116,7 +119,6 @@ class Combo implements TelcoParams
         return collect(
             Telco::commercial()
                 ->getCombos($this->contractTypeId, $this->cityId)
-                //->firstWhere('IdPacote', $this->comboId)
         );
     }
 }

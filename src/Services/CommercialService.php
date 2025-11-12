@@ -115,14 +115,12 @@ readonly class CommercialService
 
     public function getCombos(int $typeContractId, int $cityId): Collection
     {
-        return collect(
-            $this->http->withUrlParameters([
-                'typeContractId' => $typeContractId,
-                'cityId' => $cityId,
-            ])
-                ->get('ws/comercial/contratos/pacotes/tipo_contrato/{typeContractId}/cidade/{cityId}')
-                ->json('resposta')
-        );
+        return $this->http->withUrlParameters([
+            'typeContractId' => $typeContractId,
+            'cityId' => $cityId,
+        ])
+            ->get('ws/comercial/contratos/pacotes/tipo_contrato/{typeContractId}/cidade/{cityId}')
+            ->collect('resposta');
     }
 
     public function getPlannerTax(int $planId, int $companyId = 1): Collection
@@ -181,26 +179,28 @@ readonly class CommercialService
 
     public function getAvailableBoxes(int $addressClient, int $typeContractId): Collection
     {
-        return collect(
-            $this->http->withUrlParameters([
-                'addressId' => $addressClient,
-                'typeContractId' => $typeContractId,
-            ])
-                ->get('ws/comercial/clientes/enderecos/{addressId}/caixas/proximas/tipo_contrato/{typeContractId}')
-                ->json('resposta')
-        );
+        return $this->http->withUrlParameters([
+            'addressId' => $addressClient,
+            'typeContractId' => $typeContractId,
+        ])
+            ->get('ws/comercial/clientes/enderecos/{addressId}/caixas/proximas/tipo_contrato/{typeContractId}')
+            ->collect('resposta');
     }
 
     public function getClientAddress(int $clientId): Collection
     {
-        return collect($this->http->withUrlParameters([
-            'clientId' => $clientId,
-        ])->get('ws/comercial/clientes/{clientId}/enderecos')->json('resposta'));
+        return $this->http
+            ->withUrlParameters([
+                'clientId' => $clientId,
+            ])->get('ws/comercial/clientes/{clientId}/enderecos')
+            ->collect('resposta');
     }
 
     public function getTypesContracts(): Collection
     {
-        return collect($this->http->get('ws/comercial/contratos/tipos')->json('resposta'));
+        return $this->http
+            ->get('ws/comercial/contratos/tipos')
+            ->collect('resposta');
     }
 
     public function getTechnologies(): Collection
@@ -242,7 +242,8 @@ readonly class CommercialService
     {
         return $this->http
             ->withUrlParameters(['idClient' => $idClient])
-            ->get('ws/comercial/cliente/{idClient}/dados')->collect();
+            ->get('ws/comercial/cliente/{idClient}/dados')
+            ->collect();
     }
 
     public function getClientDataInvoicesContractsByCPF(string $cpfcnpj, ?Carbon $startDate = null, ?Carbon $endDate = null): Collection
@@ -281,9 +282,9 @@ readonly class CommercialService
     public function changeDueDate(string $clientId, int $newDueDateId, int $nowDueDateId): PromiseInterface|Response
     {
         return $this->http
-                ->withUrlParameters([
-                    'clientId' => $clientId,
-                ])
+            ->withUrlParameters([
+                'clientId' => $clientId,
+            ])
             ->put('/ws/comercial/cliente/{clientId}/alterar/vencimentos', [
                 'idVencimentoAtual' => $nowDueDateId,
                 'idNovoVencimento' => $newDueDateId,
@@ -298,7 +299,7 @@ readonly class CommercialService
                 'idUsuario' => $userId,
                 'tipo' => 'DOCUMENTO',
                 'model' => [
-                    'base64'   => base64_encode($file->getContent()),
+                    'base64' => base64_encode($file->getContent()),
                     'filename' => $file->getClientOriginalName(),
                     'filesize' => $file->getSize(),
                     'filetype' => $file->getMimeType(),
