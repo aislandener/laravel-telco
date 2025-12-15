@@ -187,6 +187,11 @@ readonly class CommercialService
             ->collect('resposta');
     }
 
+    public function registerClientAddress(Address $address): Collection
+    {
+        return $this->http->post('ws/comercial/clientes/enderecos/cadastrar', $address->toArray())->collect();
+    }
+
     public function getClientAddress(int $clientId): Collection
     {
         return $this->http
