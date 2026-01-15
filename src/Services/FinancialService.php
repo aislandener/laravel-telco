@@ -3,11 +3,15 @@
 namespace Aislandener\Telco\Services;
 
 use Aislandener\Telco\Enums\TypeBilling;
+use Composer\InstalledVersions;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Laravel\Telescope\EntryType;
+use Laravel\Telescope\IncomingEntry;
+use Laravel\Telescope\Telescope;
 
 readonly class FinancialService
 {
