@@ -109,14 +109,11 @@ class Combo implements TelcoParams
         ];
     }
 
+
+
     public function getTechnologyId(): string
     {
-        return Telco::commercial()
-            ->getTechnologies()
-            ->whereIn('descricao', collect($this->getInfoServer()['PlanosPacote'])
-                ->pluck('Tecnologia')
-                ->toArray())
-            ->implode('id', '-');
+        return '4';
     }
 
     public function getInfoServer(int $technologyId = 4): Collection
