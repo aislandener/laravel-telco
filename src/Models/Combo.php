@@ -3,6 +3,7 @@
 namespace Aislandener\Telco\Models;
 
 use Aislandener\Telco\Contracts\TelcoParams;
+use Aislandener\Telco\Exceptions\TelcoException;
 use Aislandener\Telco\Enums\TypePerson;
 use Aislandener\Telco\Facades\Telco;
 use Illuminate\Support\Collection;
@@ -40,7 +41,11 @@ class Combo implements TelcoParams
     public function commitContractToClient(): array
     {
         $info = $this->getInfoServer()
-            ->firstWhere('IdPacote', $this->comboId);
+                     ->firstWhere('IdPacote', $this->comboId);
+
+        if (! $info) {
+            throw new TelcoException("Pacote {$this->comboId} não encontrado", 404);
+        }
 
         $data = [
             'idTipoContrato' => $this->contractTypeId,

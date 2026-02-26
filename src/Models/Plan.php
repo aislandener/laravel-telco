@@ -33,6 +33,11 @@ class Plan implements TelcoParams
     public function commitContractToClient(): array
     {
         $info = $this->getInfoServer();
+
+        if (! $info) {
+            throw new TelcoException("Plano {$this->planId} não encontrado", 404);
+        }
+
         $planner = [];
         if($info['PossuiPlanejamentoTributario']) {
             $planner = [
