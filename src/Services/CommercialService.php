@@ -296,6 +296,14 @@ readonly class CommercialService
             ]);
     }
 
+    public function acceptContract(int $contractId): Collection
+    {
+        return $this->http
+            ->withUrlParameters(['contractId' => $contractId])
+            ->get('ws/comercial/contratos/aceite/{contractId}')
+            ->collect();
+    }
+
     public function attachFilesToProspect(int $prospectId, int $userId, array $files): Response
     {
         $payload = collect($files)->map(function (UploadedFile $file, $key) use ($prospectId, $userId) {
