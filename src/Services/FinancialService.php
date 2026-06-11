@@ -52,6 +52,26 @@ readonly class FinancialService
             ->collect();
     }
 
+    public function getInvoiceById(int $invoiceId): Collection
+    {
+        return $this->http
+            ->withUrlParameters(['invoiceId' => $invoiceId])
+            ->get('ws/financeiro/faturas/{invoiceId}')
+            ->collect('resposta');
+    }
+
+    public function getAvailableServices(int $cityId, int $companyId, bool $isRecurring = false): Collection
+    {
+        return $this->http
+            ->withUrlParameters([
+                'cityId' => $cityId,
+                'companyId' => $companyId,
+            ])
+            ->withQueryParameters(['isRecorrente' => $isRecurring ? 1 : 0])
+            ->get('ws/financeiro/servicos/cidade/{cityId}/empresa/{companyId}')
+            ->collect('resposta');
+    }
+
     public function getCardsRegistersByClient(string $clientId): Collection
     {
         return $this->http
@@ -80,6 +100,32 @@ readonly class FinancialService
                 'tipoDocumentoCliente' => $documentType,
             ])
             ->collect('resposta');
+    }
+
+    public function consultDynamicPixPayments(): Collection
+    {
+        return $this->http
+            ->get('ws/financeiro/pix_dinamico/pagamentos/consultar')
+            ->collect();
+    }
+
+    public function registerAdditionalService(
+        int $userId,
+        int $clientId,
+        int $serviceId,
+        int $contractId,
+        string $observation,
+        int $installments
+    ): Collection
+    {
+        return $this->http->post('ws/financeiro/servicos_adicionais/cadastrar', [
+            'idUsuario' => $userId,
+            'idCliente' => $clientId,
+            'idServico' => $serviceId,
+            'idContrato' => $contractId,
+            'obs' => $observation,
+            'qtdeParcelas' => $installments,
+        ])->collect();
     }
 
     public function downloadInvoice($invoice_id, string $path, string $username, string $password): PromiseInterface|Response
