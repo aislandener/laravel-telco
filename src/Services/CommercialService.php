@@ -165,6 +165,13 @@ readonly class CommercialService
             ])->json();
     }
 
+    public function getContractFull(int $contractId): mixed
+    {
+        return $this->http->post('ws/comercial/contrato/dados', [
+            'idContrato' => $contractId,
+        ])->json();
+    }
+
     public function createTicket(
         int    $contractId,
         string $description = '[e-Commerce] Agendamento de instalação',
