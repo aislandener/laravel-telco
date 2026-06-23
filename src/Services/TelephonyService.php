@@ -32,6 +32,18 @@ readonly class TelephonyService
         return collect($prefixTelco);
     }
 
+    public function getAvailableMvnoNumbers(int $ddd, string $integradora = 'MVNO'): Collection
+    {
+        return collect(
+            $this->http->withUrlParameters([
+                'ddd' => $ddd,
+                'integradora' => $integradora,
+            ])
+                ->get('ws/integracao/numeros/disponiveis/ddd/{ddd}/integradora/{integradora}')
+                ->json('Telefone')
+        );
+    }
+
     /**
      * @throws TelcoException
      */

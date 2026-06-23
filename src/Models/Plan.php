@@ -28,11 +28,13 @@ class Plan implements TelcoParams
         public int $commercialOrigin = 15,
         public int $canSuspend = 1,
         public TypePerson $typePerson = TypePerson::Personal,
+        public ?string $numero = null,
+        public int $technologyId = 4,
     ) {}
 
     public function commitContractToClient(): array
     {
-        $info = $this->getInfoServer();
+        $info = $this->getInfoServer($this->technologyId);
 
         if (! $info) {
             throw new TelcoException("Plano {$this->planId} não encontrado", 404);
@@ -61,7 +63,7 @@ class Plan implements TelcoParams
             'idSaidaCaixa' => $this->outputBoxId,
             'idCaixa' => $this->boxId,
             'idsPromocoes' => $this->promo,
-        ], $planner);
+        ], $planner, $this->numero ? ['numero' => $this->numero] : []);
     }
 
     public function commitPromoExists(array $data): array
