@@ -311,6 +311,11 @@ readonly class CommercialService
             ->collect();
     }
 
+    public function registerClientContacts(array $contacts): mixed
+    {
+        return $this->http->post('ws/comercial/clientes/contatos/cadastrar', $contacts)->json();
+    }
+
     public function attachFilesToProspect(int $prospectId, int $userId, array $files): Response
     {
         $payload = collect($files)->map(function (UploadedFile $file, $key) use ($prospectId, $userId) {
