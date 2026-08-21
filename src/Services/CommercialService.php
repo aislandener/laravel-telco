@@ -291,6 +291,16 @@ readonly class CommercialService
             ->collect();
     }
 
+    public function enableMobileTelephonyContract(int $contractId, string $simCardNumber): Collection
+    {
+        return $this->http
+            ->post('ws/comercial/contratos/telefonia_movel/habilitar', [
+                'idContrato' => $contractId,
+                'numeroSimCard' => $simCardNumber,
+            ])
+            ->collect();
+    }
+
     public function changeDueDate(string $clientId, int $newDueDateId, int $nowDueDateId): PromiseInterface|Response
     {
         return $this->http
