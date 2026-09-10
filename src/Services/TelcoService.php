@@ -85,6 +85,7 @@ class TelcoService
     private function http(?int $timeout = null): PendingRequest
     {
         $method = null;
+        $retrying = false;
         $tokenRefreshed = false;
         $connectionRetried = false;
 
@@ -95,16 +96,30 @@ class TelcoService
             ->connectTimeout($this->connectTimeout)
             ->timeout($timeout ?? $this->timeout)
             ->withHeader('Token', Cache::get(self::TELCO_TOKEN, ''))
-            ->withMiddleware(Middleware::mapRequest(function (RequestInterface $request) use (&$method) {
+            ->withMiddleware(Middleware::mapRequest(function (RequestInterface $request) use (&$method, &$retrying, &$tokenRefreshed, &$connectionRetried) {
                 $method = $request->getMethod();
+
+                // A request that is not a replay opens a new budget, so a service kept in a
+                // variable does not inherit what the previous call already spent.
+                if (! $retrying) {
+                    $tokenRefreshed = false;
+                    $connectionRetried = false;
+                }
+
+                $retrying = false;
 
                 return $request;
             }))
             ->retry(
                 $this->tries,
                 // Exponential backoff with jitter, so a struggling upstream is not hit by
-                // every worker on the same 100ms beat.
-                fn (int $attempt) => (2 ** ($attempt - 1)) * 250 + random_int(0, 250),
+                // every worker on the same 100ms beat. Only replays sleep, which is what
+                // tells the middleware above that the next request continues this budget.
+                function (int $attempt) use (&$retrying) {
+                    $retrying = true;
+
+                    return (2 ** ($attempt - 1)) * 250 + random_int(0, 250);
+                },
                 when: function (Exception $exception, PendingRequest $request) use (&$method, &$tokenRefreshed, &$connectionRetried) {
                     // Expired token: refresh once and replay. Safe for any verb, the upstream
                     // rejected the request before processing it.
