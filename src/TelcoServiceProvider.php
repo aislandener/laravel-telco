@@ -33,6 +33,8 @@ class TelcoServiceProvider extends ServiceProvider
         $this->app->when(TelcoService::class)->needs('$recurrenceKey')->giveConfig('telco.recurrence.key');
         $this->app->when(TelcoService::class)->needs('$recurrenceCipher')->giveConfig('telco.recurrence.cipher');
         $this->app->when(TelcoService::class)->needs('$timeout')->giveConfig('telco.timeout');
+        $this->app->when(TelcoService::class)->needs('$connectTimeout')->giveConfig('telco.connect_timeout');
+        $this->app->when(TelcoService::class)->needs('$tries')->giveConfig('telco.tries');
     }
 
     private function publishConfig(): void
